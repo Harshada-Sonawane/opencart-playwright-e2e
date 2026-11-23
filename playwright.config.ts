@@ -32,7 +32,7 @@ export default defineConfig({
     baseURL: 'https://naveenautomationlabs.com/opencart/',
 
     /* Run browsers without a visible window. Use `npm run test:headed` (or `--headed`) to watch them. */
-    headless: false,
+    headless: true,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
