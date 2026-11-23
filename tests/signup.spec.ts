@@ -5,8 +5,8 @@ import { MyAccountPage } from '../pages/MyAccountPage';
 import { RegisterPage } from '../pages/RegisterPage';
 import { duplicateAttemptName, users } from '../test-data/users';
 
-test.describe('OpenCart signup', () => {
-  test('login page links to the registration form', async ({ page, loginPage, registerPage }) => {
+test.describe('OpenCart signup', { tag: '@regression' }, () => {
+  test('login page links to the registration form', { tag: '@smoke' }, async ({ page, loginPage, registerPage }) => {
     await loginPage.goto();
 
     await expect(loginPage.newCustomerHeading).toBeVisible();
@@ -23,7 +23,7 @@ test.describe('OpenCart signup', () => {
       await registerPage.goto();
     });
 
-    test('renders all fields with the expected defaults', async ({ registerPage }) => {
+    test('renders all fields with the expected defaults', { tag: '@smoke' }, async ({ registerPage }) => {
       for (const field of registerPage.textFields()) {
         await expect(field).toBeVisible();
         await expect(field).toBeEmpty();
@@ -44,7 +44,7 @@ test.describe('OpenCart signup', () => {
       await expect(loginPage.returningCustomerHeading).toBeVisible();
     });
 
-    test('submitting an empty form shows every required-field error', async ({ page, registerPage }) => {
+    test('submitting an empty form shows every required-field error', { tag: '@negative' }, async ({ page, registerPage }) => {
       await registerPage.submit();
 
       await expect(registerPage.error('privacyPolicy')).toBeVisible();
@@ -56,7 +56,7 @@ test.describe('OpenCart signup', () => {
       await expect(page).toHaveURL(RegisterPage.urlPattern);
     });
 
-    test('rejects a valid form when the privacy policy is not accepted', async ({ page, registerPage }) => {
+    test('rejects a valid form when the privacy policy is not accepted', { tag: '@negative' }, async ({ page, registerPage }) => {
       await registerPage.register(users.withoutPrivacyConsent());
 
       await expect(registerPage.error('privacyPolicy')).toBeVisible();
@@ -64,14 +64,14 @@ test.describe('OpenCart signup', () => {
       await expect(page).toHaveURL(RegisterPage.urlPattern);
     });
 
-    test('rejects mismatched password confirmation', async ({ page, registerPage }) => {
+    test('rejects mismatched password confirmation', { tag: '@negative' }, async ({ page, registerPage }) => {
       await registerPage.register(users.mismatchedPassword());
 
       await expect(registerPage.error('confirm')).toBeVisible();
       await expect(page).toHaveURL(RegisterPage.urlPattern);
     });
 
-    test('enforces server-side field length and format rules', async ({ page, registerPage }) => {
+    test('enforces server-side field length and format rules', { tag: '@negative' }, async ({ page, registerPage }) => {
       await registerPage.register(users.outOfRangeFields());
 
       await expect(registerPage.error('firstName')).toBeVisible();
@@ -82,7 +82,7 @@ test.describe('OpenCart signup', () => {
       await expect(page).toHaveURL(RegisterPage.urlPattern);
     });
 
-    test('rejects a password longer than 20 characters', async ({ page, registerPage }) => {
+    test('rejects a password longer than 20 characters', { tag: ['@negative', '@known-issue'] }, async ({ page, registerPage }) => {
       // Known defect: the message says "4 and 20 characters" but the demo store accepts
       // a 21-character password and creates the account. Remove test.fail() once fixed.
       test.fail(true, 'Site does not enforce the 20-character maximum it advertises');
@@ -92,7 +92,7 @@ test.describe('OpenCart signup', () => {
       await expect(page).toHaveURL(RegisterPage.urlPattern);
     });
 
-    test('browser blocks submission of an email without "@"', async ({ page, registerPage }) => {
+    test('browser blocks submission of an email without "@"', { tag: '@negative' }, async ({ page, registerPage }) => {
       await registerPage.register(users.emailWithoutAt());
 
       expect(await registerPage.isEmailNativelyValid()).toBe(false);
@@ -101,7 +101,7 @@ test.describe('OpenCart signup', () => {
       await expect(page).toHaveURL(RegisterPage.urlPattern);
     });
 
-    test('keeps entered values after a failed submission', async ({ registerPage }) => {
+    test('keeps entered values after a failed submission', { tag: '@negative' }, async ({ registerPage }) => {
       const user = users.withoutPrivacyConsent();
       await registerPage.register(user);
 
@@ -113,7 +113,7 @@ test.describe('OpenCart signup', () => {
   });
 
   test.describe('successful registration', () => {
-    test('creates the account and lands on My Account', async ({
+    test('creates the account and lands on My Account', { tag: '@smoke' }, async ({
       page,
       registerPage,
       accountSuccessPage,
@@ -155,7 +155,7 @@ test.describe('OpenCart signup', () => {
       await expect(myAccountPage.heading).toBeVisible();
     });
 
-    test('rejects an email that is already registered', async ({ page, registerPage, logoutPage }) => {
+    test('rejects an email that is already registered', { tag: '@negative' }, async ({ page, registerPage, logoutPage }) => {
       const user = users.valid();
 
       await registerPage.goto();
