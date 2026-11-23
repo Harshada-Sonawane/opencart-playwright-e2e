@@ -1,0 +1,15 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Secrets
+.env
+.env.*
+
+# Playwright MCP browser session artifacts (snapshots, console logs)
+/.playwright-mcp/

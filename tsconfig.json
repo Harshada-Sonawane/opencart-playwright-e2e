@@ -1,0 +1,19 @@
+{
+  // Used for type-checking only (`npm run typecheck`). Playwright transpiles the tests itself.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["tests", "pages", "fixtures", "test-data", "utils", "playwright.config.ts"]
+}
